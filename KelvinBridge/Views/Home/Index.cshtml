@@ -1,0 +1,144 @@
+﻿@model BridgeModel
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Лабораторная работа</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <style>
+        .result-box {
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h1 class="text-center">Определение малых сопротивлений с помощью моста Кельвина</h1>
+
+            <div class="form-group">
+                <label for="variantSelect">Выберите вариант:</label>
+                <select class="form-control" id="variantSelect" onchange="selectVariant()">
+                    <option value="">Выберите вариант</option>
+                    @foreach (var variant in ViewBag.Variants)
+                    {
+                        <option data-ra="@variant.Ra.ToString().Replace(",", ".")" data-rm="@variant.Rm.ToString().Replace(",", ".")"
+                                data-rn="@variant.Rn.ToString().Replace(",", ".")" data-rnn="@variant.RN.ToString().Replace(",", ".")"
+                                data-rmm="@variant.RM.ToString().Replace(",", ".")">@variant.VariantName</option>
+                    }
+                </select>
+            </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <img src="~/images/Kelvin.png" alt="Image" class="img-fluid mt-4">
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group result-box">
+                            <h6>Параметры сопротивления</h6>
+                            <label asp-for="Rx">R<sub>x</sub></label>
+                            <div class="input-group">
+                                <input asp-for="Rx" type="number" step="0.001" class="form-control" readonly>
+                                <div class="input-group-append">
+                                    <span class="input-group-text">Ом</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            <div class="form-group">
+                    <label asp-for="Ra">R<sub>a</sub></label>
+                <div class="input-group">
+                    <input asp-for="Ra" type="number" step="0.001" class="form-control">
+                    <div class="input-group-append">
+                        <span class="input-group-text">Ом</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                    <label asp-for="Rm">R<sub>m</sub></label>
+                <div class="input-group">
+                    <input asp-for="Rm" type="number" step="0.001" class="form-control" onchange="fieldsChange()">
+                    <div class="input-group-append">
+                        <span class="input-group-text">Ом</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                    <label asp-for="Rn">R<sub>n</sub></label>
+                <div class="input-group">
+                    <input asp-for="Rn" type="number" step="0.001" class="form-control" onchange="fieldsChange()">
+                    <div class="input-group-append">
+                        <span class="input-group-text">Ом</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                    <label asp-for="RM">R<sub>M</sub></label>
+                <div class="input-group">
+                    <input asp-for="RM" type="number" step="0.001" class="form-control" onchange="fieldsChange()">
+                    <div class="input-group-append">
+                        <span class="input-group-text">Ом</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                    <label asp-for="RN">R<sub>N</sub></label>
+                <div class="input-group">
+                    <input asp-for="RN" type="number" step="0.001" class="form-control" onchange="fieldsChange()">
+                    <div class="input-group-append">
+                        <span class="input-group-text">Ом</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="V"></label>
+                <div class="input-group">
+                    <input asp-for="V" type="number" step="0.001" class="form-control" readonly>
+                    <div class="input-group-append">
+                        <span class="input-group-text">В</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-4">
+                <div class="btn-group">
+                    <button onclick="calculateResult()" class="btn btn-primary" id="buttonResult">Рассчитать</button>
+                    <button onclick="resetFields()" class="btn btn-secondary">Сбросить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="myModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Ошибка</h5>
+            </div>
+            <div class="modal-body">
+                <p>Пожалуйста, заполните все поля!</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="closeModal()">Закрыть</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/lib/js/site.js"></script>
+</body>
+</html>
